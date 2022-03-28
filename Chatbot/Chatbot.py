@@ -20,10 +20,12 @@ auxX = []
 auxY = []
 
 Alumnos = [{'Nombre':'Luis','Nua':345805, 'Correo': 'jl.gutierrezbecerra@ugto.mx'}, {
-    'Nombre':'Luis','Nua':345807, 'Correo': 'le.santoyoparamo@ugto.mx'}]
+    'Nombre':'Luis','Nua':345807, 'Correo': 'le.santoyoparamo@ugto.mx'},{'Nombre':'Andres',
+    'Nua':345901, 'Correo':'aa.cardososanchez@ugto.mx'}]
 
 Empleados = [{'Nombre':'Enrique','Nue':475816, 'Correo': 'ae.martinezhernandez@ugto.mx'},{
-    'Nombre':'Jorge','Nue':475809, 'Correo': 'ja.torresmejia@ugto.mx'}]
+    'Nombre':'Jorge','Nue':475809, 'Correo': 'ja.torresmejia@ugto.mx'},{'Nombre':'Mario',
+    'Nue':475304, 'Correo': 'M.torresaraujo@ugto.mx'}]
 
 for contenido in datos["Etiquetas"]:
     for patrones in contenido["patrones"]:

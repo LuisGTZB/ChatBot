@@ -2,7 +2,6 @@ import this
 import numpy as np
 import nltk as nl
 from nltk.stem.lancaster import LancasterStemmer
-from sympy import false, true
 stemmer = LancasterStemmer()
 import json 
 import tensorflow as tf
@@ -21,12 +20,10 @@ auxX = []
 auxY = []
 
 Alumnos = [{'Nombre':'Luis','Nua':345805, 'Correo': 'jl.gutierrezbecerra@ugto.mx'}, {
-    'Nombre':'Luis','Nua':345807, 'Correo': 'le.santoyoparamo@ugto.mx'},{'Nombre':'Andres',
-    'Nua':345901, 'Correo':'aa.cardososanchez@ugto.mx'}]
+    'Nombre':'Luis','Nua':345807, 'Correo': 'le.santoyoparamo@ugto.mx'}]
 
 Empleados = [{'Nombre':'Enrique','Nue':475816, 'Correo': 'ae.martinezhernandez@ugto.mx'},{
-    'Nombre':'Jorge','Nue':475809, 'Correo': 'ja.torresmejia@ugto.mx'},{'Nombre':'Mario',
-    'Nue':475304, 'Correo': 'M.torresaraujo@ugto.mx'}]
+    'Nombre':'Jorge','Nue':475809, 'Correo': 'ja.torresmejia@ugto.mx'}]
 
 for contenido in datos["Etiquetas"]:
     for patrones in contenido["patrones"]:
@@ -100,9 +97,8 @@ def get_user_email(user_profile, user_number):
                 break
 
 #Funcion de entrada de datos del usuario 
-run = true
 def botInit():
-    while run == true:
+    while True:
         entrada = input("Tú: ")
         bucket = [0 for _ in range(len(palabras))]
         entradap = nl.word_tokenize(entrada)
@@ -125,9 +121,9 @@ def botInit():
             for tagAux in datos["Etiquetas"]:
                 if tagAux["tag"] == tag:
                     respuesta = tagAux["respuesta"]
-                #Se elige una respuesta al azar según el patron que detecta 
+            #Se elige una respuesta al azar según el patron que detecta 
             print("Bot: ", random.choice(respuesta))
-        
+            #Finalizacion del programa
         if tag == 'despedida':
-            run = false
+            break
 botInit()

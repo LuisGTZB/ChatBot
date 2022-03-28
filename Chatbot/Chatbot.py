@@ -2,6 +2,7 @@ import this
 import numpy as np
 import nltk as nl
 from nltk.stem.lancaster import LancasterStemmer
+from sympy import false, true
 stemmer = LancasterStemmer()
 import json 
 import tensorflow as tf
@@ -99,8 +100,9 @@ def get_user_email(user_profile, user_number):
                 break
 
 #Funcion de entrada de datos del usuario 
+run = true
 def botInit():
-    while True:
+    while run == true:
         entrada = input("Tú: ")
         bucket = [0 for _ in range(len(palabras))]
         entradap = nl.word_tokenize(entrada)
@@ -125,4 +127,7 @@ def botInit():
                     respuesta = tagAux["respuesta"]
                 #Se elige una respuesta al azar según el patron que detecta 
             print("Bot: ", random.choice(respuesta))
+        
+        if tag == 'despedida':
+            run = false
 botInit()

@@ -11,67 +11,75 @@ import pickle
 
 #nl.download('punkt')
 
-with open("Etiquetas.json", encoding="utf-8") as archivo:
+with open("Etiquetas.json", encoding='utf-8') as archivo:
     datos = json.load(archivo)
 
-palabras = []
-tags = []
-auxX = []
-auxY = []
+    #Listas para obtener correos de los registros de empleado y alumno
+    Alumnos = [{'Nombre':'Luis','Nua':345805, 'Correo': 'jl.gutierrezbecerra@ugto.mx'}, {
+        'Nombre':'Eduardo','Nua':345806, 'Correo': 'le.santoyoparamo@ugto.mx'},{ 
+        'Nombre':'Roman', 'Nua':345807, 'Correo':'br.lopezcano@ugto.mx'},{ 
+        'Nombre':'Adrian', 'Nua':345808, 'Correo':'ad.lopezgarcia@ugto.mx'},{ 
+        'Nombre':'Mariana', 'Nua':345809, 'Correo':'me.garciahernandez@ugto.mx'},{ 
+        'Nombre':'Jimena', 'Nua':345810, 'Correo':'pj.renteriamondelo@ugto.mx'}]
 
-#Listas para obtener correos de los registros de empleado y alumno
-Alumnos = [{'Nombre':'Luis','Nua':345805, 'Correo': 'jl.gutierrezbecerra@ugto.mx'}, {
-    'Nombre':'Eduardo','Nua':345806, 'Correo': 'le.santoyoparamo@ugto.mx'},{ 
-    'Nombre':'Roman', 'Nua':345807, 'Correo':'br.lopezcano@ugto.mx'},{ 
-    'Nombre':'Adrian', 'Nua':345808, 'Correo':'ad.lopezgarcia@ugto.mx'},{ 
-    'Nombre':'Mariana', 'Nua':345809, 'Correo':'me.garciahernandez@ugto.mx'},{ 
-    'Nombre':'Jimena', 'Nua':345810, 'Correo':'pj.renteriamondelo@ugto.mx'}]
+    Empleados = [{'Nombre':'Enrique','Nue':475801, 'Correo': 'ae.martinezhernandez@ugto.mx'},{
+        'Nombre':'Jorge','Nue':475802, 'Correo': 'ja.torresmejia@ugto.mx'},{
+        'Nombre':'Monica','Nue':475803, 'Correo': 'mm.villasenior@ugto.mx'},{
+        'Nombre':'Martha','Nue':475804, 'Correo': 'mp.andradevillas@ugto.mx'},{
+        'Nombre':'Andrea','Nue':475805, 'Correo': 'ma.diazmedrano@ugto.mx'},{
+        'Nombre':'Daniel','Nue':475806, 'Correo': 'da.gutierrezvalderrama@ugto.mx'}]
 
-Empleados = [{'Nombre':'Enrique','Nue':475801, 'Correo': 'ae.martinezhernandez@ugto.mx'},{
-    'Nombre':'Jorge','Nue':475802, 'Correo': 'ja.torresmejia@ugto.mx'},{
-    'Nombre':'Monica','Nue':475803, 'Correo': 'mm.villasenior@ugto.mx'},{
-    'Nombre':'Martha','Nue':475804, 'Correo': 'mp.andradevillas@ugto.mx'},{
-    'Nombre':'Andrea','Nue':475805, 'Correo': 'ma.diazmedrano@ugto.mx'},{
-    'Nombre':'Daniel','Nue':475806, 'Correo': 'da.gutierrezvalderrama@ugto.mx'}]
+#Si es la primera vez se crea todo el modelo, sino solamente se carga 
+try:
+    with open("modelo.pickle", "rb") as archivoModelo:
+        palabras, tags, entrenamiento, salida = pickle.load(archivoModelo)
+except:
+    palabras = []
+    tags = []
+    auxX = []
+    auxY = []
 
-for contenido in datos["Etiquetas"]:
-    for patrones in contenido["patrones"]:
-        auxpalabra = nl.word_tokenize(patrones)
-        palabras.extend(auxpalabra)
-        auxX.append(auxpalabra)
-        auxY.append(contenido["tag"])
+    for contenido in datos["Etiquetas"]:
+        for patrones in contenido["patrones"]:
+            auxpalabra = nl.word_tokenize(patrones)
+            palabras.extend(auxpalabra)
+            auxX.append(auxpalabra)
+            auxY.append(contenido["tag"])
 
-        if contenido["tag"] not in tags:
-            tags.append(contenido["tag"])
+            if contenido["tag"] not in tags:
+                tags.append(contenido["tag"])
 
-#NOTE: SOBRECARGA DE CAST STR NECESARIO
-palabras = [stemmer.stem(str(p).lower()) for p in palabras] 
-palabras = sorted(list(set(palabras)))
-tags = sorted(tags)
+    #NOTE: SOBRECARGA DE CAST STR NECESARIO
+    palabras = [stemmer.stem(str(p).lower()) for p in palabras] 
+    palabras = sorted(list(set(palabras)))
+    tags = sorted(tags)
 
-entrenamiento = []
-salida = []
-salidaVacia = [0 for _ in range(len(tags))]
+    entrenamiento = []
+    salida = []
+    salidaVacia = [0 for _ in range(len(tags))]
 
-#NOTE: ALGORITMO DE LA CUBETA PARA CLASIFICAR PALABRAS 
-#REF: https¨//xyz.com.mx/jlsfksdhfk
-for x, documento in enumerate(auxX):
-    bucket = []
-    auxpalabra = [stemmer.stem(str(p).lower()) for p in documento]
-    for p in palabras:
-        if p in auxpalabra:
-            bucket.append(1)
-        else:
-            bucket.append(0)
-    filaSalida = salidaVacia[:]
-    filaSalida[tags.index(auxY[x])]=1
-    entrenamiento.append(bucket)
-    salida.append(filaSalida)
+    #NOTE: ALGORITMO DE LA CUBETA PARA CLASIFICAR PALABRAS 
+    #REF: https¨//xyz.com.mx/jlsfksdhfk
+    for x, documento in enumerate(auxX):
+        bucket = []
+        auxpalabra = [stemmer.stem(str(p).lower()) for p in documento]
+        for p in palabras:
+            if p in auxpalabra:
+                bucket.append(1)
+            else:
+                bucket.append(0)
+        filaSalida = salidaVacia[:]
+        filaSalida[tags.index(auxY[x])]=1
+        entrenamiento.append(bucket)
+        salida.append(filaSalida)
 
-#TODO 1: FORMATEO DE RESULTADO ...
+    #TODO 1: FORMATEO DE RESULTADO ...
 
-entrenamiento = np.array(entrenamiento)
-salida = np.array(salida)
+    entrenamiento = np.array(entrenamiento)
+    salida = np.array(salida)
+
+    with open("modelo.pickle", "wb") as archivoModelo:
+        pickle.dump((palabras, tags, entrenamiento, salida), archivoModelo)
 
 tf.compat.v1.reset_default_graph() #Se pone en blaco la red 
 
@@ -83,8 +91,13 @@ red = tl.fully_connected(red, len(salida[0]), activation="softmax")
 red = tl.regression(red)
 
 modelo = tl.DNN(red)
-modelo.fit(entrenamiento, salida, n_epoch=1000, batch_size=12, show_metric=True)
-modelo.save("modelo.chat")
+
+#se carga el modelo de entrenamiento en caso de existir, sino, se crea 
+try:
+    modelo.load("modelo.chat")
+except:
+    modelo.fit(entrenamiento, salida, n_epoch=1000, batch_size=12, show_metric=True)
+    modelo.save("modelo.chat")
 
 #Funcion para obtener el correo solicitado
 def get_user_email(user_profile, user_number, debug=False): 

@@ -36,7 +36,7 @@ for contenido in datos["Etiquetas"]:
             tags.append(contenido["tag"])
 
 #NOTE: SOBRECARGA DE CAST STR NECESARIO
-palabras = [stemmer.stem(str(p).lower()) for p in palabras] #Cast necesario para usar lower
+palabras = [stemmer.stem(str(p).lower()) for p in palabras] 
 palabras = sorted(list(set(palabras)))
 tags = sorted(tags)
 
@@ -78,7 +78,8 @@ modelo.fit(entrenamiento, salida, n_epoch=1000, batch_size=12, show_metric=True)
 modelo.save("modelo.chat")
 
 #Funcion para obtener el correo solicitado
-def get_user_email(user_profile, user_number):
+def get_user_email(user_profile, user_number, debug=False):
+    if debug: print("get_user_email > " + user_profile + ", " + str(user_number))
     if user_profile == "empleado":
         for Empleado in Empleados:
             if user_number == Empleado['Nue']:
@@ -96,7 +97,7 @@ def get_user_email(user_profile, user_number):
                 print("Datos erroneos, verifica e intentalo de nuevo")
                 break
 
-#Funcion de entrada de datos del usuario 
+#Funcion principal del bot
 def botInit():
     while True:
         entrada = input("Tú: ")
@@ -116,7 +117,7 @@ def botInit():
             user_profile = user_profile.lower()
             user_number = int(input("Bot: Ingresa tu identificador\t"))
 
-            get_user_email(user_profile, user_number)
+            get_user_email(user_profile, user_number, True)
         else:
             for tagAux in datos["Etiquetas"]:
                 if tagAux["tag"] == tag:

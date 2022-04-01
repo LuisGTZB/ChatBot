@@ -8,7 +8,7 @@
         "respuesta":["espero haberte ayudado, fue un placer atenderte"]
     },
     {"tag":"correo",
-        "patrones":["correo", "quiero saber mi correo, consultar correo"]
+        "patrones":["correo", "quiero saber mi correo", "consultar correo"]
     },
     {"tag":"password",
         "patrones":["Contraseña", "quiero recuperar mi contraseña"],

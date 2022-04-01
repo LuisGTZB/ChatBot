@@ -5,6 +5,7 @@ def get_user_email(user_profile, user_number):
                 print(Empleado['Correo'])
     elif user_profile == "Alumno":
         for Alumno in Alumnos:
+            print(Alumno)
             if Alumno['Nua'] == user_number:
                 print(Alumno['Correo'])
 

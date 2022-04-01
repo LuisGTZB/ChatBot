@@ -19,11 +19,20 @@ tags = []
 auxX = []
 auxY = []
 
+#Listas para obtener correos de los registros de empleado y alumno
 Alumnos = [{'Nombre':'Luis','Nua':345805, 'Correo': 'jl.gutierrezbecerra@ugto.mx'}, {
-    'Nombre':'Luis','Nua':345807, 'Correo': 'le.santoyoparamo@ugto.mx'}]
+    'Nombre':'Eduardo','Nua':345806, 'Correo': 'le.santoyoparamo@ugto.mx'},{ 
+    'Nombre':'Roman', 'Nua':345807, 'Correo':'br.lopezcano@ugto.mx'},{ 
+    'Nombre':'Adrian', 'Nua':345808, 'Correo':'ad.lopezgarcia@ugto.mx'},{ 
+    'Nombre':'Mariana', 'Nua':345809, 'Correo':'me.garciahernandez@ugto.mx'},{ 
+    'Nombre':'Jimena', 'Nua':345810, 'Correo':'pj.renteriamondelo@ugto.mx'}]
 
-Empleados = [{'Nombre':'Enrique','Nue':475816, 'Correo': 'ae.martinezhernandez@ugto.mx'},{
-    'Nombre':'Jorge','Nue':475809, 'Correo': 'ja.torresmejia@ugto.mx'}]
+Empleados = [{'Nombre':'Enrique','Nue':475801, 'Correo': 'ae.martinezhernandez@ugto.mx'},{
+    'Nombre':'Jorge','Nue':475802, 'Correo': 'ja.torresmejia@ugto.mx'},{
+    'Nombre':'Monica','Nue':475803, 'Correo': 'mm.villasenior@ugto.mx'},{
+    'Nombre':'Martha','Nue':475804, 'Correo': 'mp.andradevillas@ugto.mx'},{
+    'Nombre':'Andrea','Nue':475805, 'Correo': 'ma.diazmedrano@ugto.mx'},{
+    'Nombre':'Daniel','Nue':475806, 'Correo': 'da.gutierrezvalderrama@ugto.mx'}]
 
 for contenido in datos["Etiquetas"]:
     for patrones in contenido["patrones"]:
@@ -78,10 +87,10 @@ modelo.fit(entrenamiento, salida, n_epoch=1000, batch_size=12, show_metric=True)
 modelo.save("modelo.chat")
 
 #Funcion para obtener el correo solicitado
-def get_user_email(user_profile, user_number, debug=False):
+def get_user_email(user_profile, user_number, debug=False): 
     if debug: print("get_user_email > " + user_profile + ", " + str(user_number))
     if user_profile == "empleado":
-        for Empleado in Empleados:
+        for  Empleado in Empleados:
             if user_number == Empleado['Nue']:
                 print("Su correo es:\t", Empleado['Correo'])
                 break
@@ -112,6 +121,7 @@ def botInit():
         resultadosIndex = np.argmax(resultado)
         tag = tags[resultadosIndex]
 
+        #Si detecta que el tag solicita le recuperacion de correo se manda llamar a la funcion
         if tag == 'correo':
             user_profile = input("Bot: Eres alumno o empleado\t")
             user_profile = user_profile.lower()

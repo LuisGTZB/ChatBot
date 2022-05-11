@@ -1,4 +1,8 @@
+from joblib import PrintTime
+
+
 def get_user_email(user_profile, user_number):
+    print("entro")
     if user_profile == "Empleado":
         for Empleado in Empleados:
             if Empleado['Nue'] == user_number:
@@ -27,5 +31,7 @@ if __name__ == "__main__":
 
     #print(user_profile,User_number)
     get_user_email(user_profile, User_number)
+
+    print("paso")
 
 

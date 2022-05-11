@@ -2,6 +2,7 @@ import this
 import numpy as np
 import nltk as nl
 from nltk.stem.lancaster import LancasterStemmer
+from regex import E
 stemmer = LancasterStemmer()
 import json 
 import tensorflow as tf
@@ -59,7 +60,6 @@ except:
     salidaVacia = [0 for _ in range(len(tags))]
 
     #NOTE: ALGORITMO DE LA CUBETA PARA CLASIFICAR PALABRAS 
-    #REF: https¨//xyz.com.mx/jlsfksdhfk
     for x, documento in enumerate(auxX):
         bucket = []
         auxpalabra = [stemmer.stem(str(p).lower()) for p in documento]
@@ -119,8 +119,25 @@ def get_user_email(user_profile, user_number, debug=False):
                 print("Datos erroneos, verifica e intentalo de nuevo")
                 break
 
+#Funcion para recuperar contraseña olvidada
+def get_password(user_profile, user_id):
+    if user_profile == "empleado":
+        for Empleado in Empleados:
+            if user_id == Empleado['Nue']:
+                send_password_email(Empleado['Correo'])
+    if user_profile == "alumno":
+        for Alumno in Alumnos:
+            if user_id == Alumno['Nua']:
+                send_password_email(Alumno['Correo'])
+               
+#Funcion para enviar contraseña temporal por correo
+def send_password_email(user_email):
+    print("Se envio una contraseña temporal a su correo registrado: ", user_email)
+
+
 #Funcion principal del bot
 def botInit():
+    print("Bot: Hola soy tu asistente en linea, ¿que puedo hacer por ti?")
     while True:
         entrada = input("Tú: ")
         bucket = [0 for _ in range(len(palabras))]
@@ -141,6 +158,14 @@ def botInit():
             user_number = int(input("Bot: Ingresa tu identificador\t"))
 
             get_user_email(user_profile, user_number, True)
+        
+        elif tag == 'password':#Recuperar contraseña
+            user_profile = input("Bot: Eres alumno o empleado\t")
+            user_profile = user_profile.lower()
+            user_number = int(input("Bot: Ingresa tu identificador\t"))
+
+            get_password(user_profile, user_number)
+
         else:
             for tagAux in datos["Etiquetas"]:
                 if tagAux["tag"] == tag:

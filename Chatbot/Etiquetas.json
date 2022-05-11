@@ -1,7 +1,7 @@
 {"Etiquetas":[
     {"tag":"saludo",
         "patrones":["hola", "Un saludo", "buen dia", "que tal", "buenas tardes"],
-        "respuesta":["Hola soy tu asistente en linea, ¿que puedo hacer por ti?"]
+        "respuesta":["¿En que te puedo ayudar?"]
     },
     {"tag":"despedida",
         "patrones":["hasta luego", "hasta pronto", "adios","nos vemos"],
@@ -11,7 +11,6 @@
         "patrones":["correo", "quiero saber mi correo", "consultar correo"]
     },
     {"tag":"password",
-        "patrones":["Contraseña", "quiero recuperar mi contraseña"],
-        "respuesta":["Ingresa tu correo"]
+        "patrones":["Contraseña", "quiero recuperar mi contraseña", "olvide mi contraseña"]
     }
     ]}

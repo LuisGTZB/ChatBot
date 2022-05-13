@@ -5,12 +5,22 @@
     },
     {"tag":"despedida",
         "patrones":["hasta luego", "hasta pronto", "adios","nos vemos"],
-        "respuesta":["espero haberte ayudado, fue un placer atenderte"]
+        "respuesta":["Hasta luego, fue un placer atenderte"]
     },
     {"tag":"correo",
         "patrones":["correo", "quiero saber mi correo", "consultar correo"]
     },
     {"tag":"password",
         "patrones":["Contraseña", "quiero recuperar mi contraseña", "olvide mi contraseña"]
-    }
-    ]}
+    },
+    {"tag":"alumno",
+        "patrones":["alumno", "estudiante", "soy alumno", "soy estudiante"]},
+        
+    {"tag":"empleado",
+        "patrones":["empleado", "soy empleado", "trabajador", "soy trabajador"]},
+
+    {"tag":"agradecimiento",
+        "patrones":["gracias", "muchas gracias", "me ayudaste mucho"],
+        "respuesta":["¿Te puedo ayudar en algo más?"]}
+    ]
+}

@@ -32,7 +32,7 @@ with open("Etiquetas.json", encoding='utf-8') as archivo:
 
 #Si es la primera vez se crea todo el modelo, sino solamente se carga 
 try:
-    with open("modelo.pickle", "rb") as archivoModelo:
+    with open("modelo2.pickle", "rb") as archivoModelo:
         palabras, tags, entrenamiento, salida = pickle.load(archivoModelo)
 except:
     palabras = []
@@ -73,12 +73,10 @@ except:
         entrenamiento.append(bucket)
         salida.append(filaSalida)
 
-    #TODO 1: FORMATEO DE RESULTADO ...
-
     entrenamiento = np.array(entrenamiento)
     salida = np.array(salida)
 
-    with open("modelo.pickle", "wb") as archivoModelo:
+    with open("modelo2.pickle", "wb") as archivoModelo:
         pickle.dump((palabras, tags, entrenamiento, salida), archivoModelo)
 
 tf.compat.v1.reset_default_graph() #Se pone en blaco la red 
@@ -93,11 +91,11 @@ red = tl.regression(red)
 modelo = tl.DNN(red)
 
 #se carga el modelo de entrenamiento en caso de existir, sino, se crea 
-try:
-    modelo.load("modelo.chat")
-except:
-    modelo.fit(entrenamiento, salida, n_epoch=1000, batch_size=12, show_metric=True)
-    modelo.save("modelo.chat")
+"""try:
+    modelo.load("modelo2.chat")
+except:"""
+modelo.fit(entrenamiento, salida, n_epoch=1000, batch_size=12, show_metric=True)
+modelo.save("modelo2.chat")
 
 #Funcion para obtener el correo solicitado
 def get_user_email(user_profile, user_number, debug=False): 
@@ -105,20 +103,17 @@ def get_user_email(user_profile, user_number, debug=False):
     if user_profile == "empleado":
         for  Empleado in Empleados:
             if user_number == Empleado['Nue']:
-                print("Su correo es:\t", Empleado['Correo'])
-                break
+                print("Su correo es:\t", Empleado['Correo'])  
             else:
                 print("Datos erroneos, verifica e intentalo de nuevo")
-                break
+                
     elif user_profile == "alumno":
         for Alumno in Alumnos:
             if user_number == Alumno['Nua']:
                 print("Su correo es:\t", Alumno['Correo'])
-                break
             else:
                 print("Datos erroneos, verifica e intentalo de nuevo")
-                break
-
+               
 #Funcion para recuperar contraseña olvidada
 def get_password(user_profile, user_id):
     if user_profile == "empleado":
@@ -134,45 +129,78 @@ def get_password(user_profile, user_id):
 def send_password_email(user_email):
     print("Se envio una contraseña temporal a su correo registrado: ", user_email)
 
-
 #Funcion principal del bot
 def botInit():
     print("Bot: Hola soy tu asistente en linea, ¿que puedo hacer por ti?")
     while True:
-        entrada = input("Tú: ")
-        bucket = [0 for _ in range(len(palabras))]
-        entradap = nl.word_tokenize(entrada)
-        entradap = [stemmer.stem(palabra.lower()) for palabra in entradap]
-        for palabrasimple in entradap:
-            for i, palabra in enumerate(palabras):
-                if palabra == palabrasimple:
-                    bucket[i] = 1
-        resultado = modelo.predict([np.asarray(bucket)])
-        resultadosIndex = np.argmax(resultado)
-        tag = tags[resultadosIndex]
+        try:
+            entrada = input("Tú: ")
+            bucket = [0 for _ in range(len(palabras))]
+            entradap = nl.word_tokenize(entrada)
+            entradap = [stemmer.stem(palabra.lower()) for palabra in entradap]
+            for palabrasimple in entradap:
+                for i, palabra in enumerate(palabras):
+                    if palabra == palabrasimple:
+                        bucket[i] = 1
+            resultado = modelo.predict([np.asarray(bucket)])
+            resultadosIndex = np.argmax(resultado)
+            tag = tags[resultadosIndex]
 
-        #Si detecta que el tag solicita le recuperacion de correo se manda llamar a la funcion
-        if tag == 'correo':
-            user_profile = input("Bot: Eres alumno o empleado\t")
-            user_profile = user_profile.lower()
-            user_number = int(input("Bot: Ingresa tu identificador\t"))
+            #Si detecta que el tag solicita le recuperacion de correo se manda llamar a la funcion
+            if tag == 'correo':
+                #user_profile = input("Bot: Eres alumno o empleado\t")
+                print("Bot: Eres alumno o empleado\t")
+                entrada = input("Tú: ")
+                bucket = [0 for _ in range(len(palabras))]
+                entradap = nl.word_tokenize(entrada)
+                entradap = [stemmer.stem(palabra.lower()) for palabra in entradap]
+                for palabrasimple in entradap:
+                    for i, palabra in enumerate(palabras):
+                        if palabra == palabrasimple:
+                            bucket[i] = 1
+                resultado = modelo.predict([np.asarray(bucket)])
+                resultadosIndex = np.argmax(resultado)
+                tag = tags[resultadosIndex]
 
-            get_user_email(user_profile, user_number, True)
-        
-        elif tag == 'password':#Recuperar contraseña
-            user_profile = input("Bot: Eres alumno o empleado\t")
-            user_profile = user_profile.lower()
-            user_number = int(input("Bot: Ingresa tu identificador\t"))
+                for idaux in datos["Etiquetas"]:
+                    if idaux["tag"] == tag:
+                        user_profile = tag
+                        user_number = int(input("Bot: Ingresa tu identificador\t"))
 
-            get_password(user_profile, user_number)
+                get_user_email(user_profile, user_number, True)
+            
+            elif tag == 'password':#Recuperar contraseña
+                print("Bot: Eres alumno o empleado\t")
+                entrada = input("Tú: ")
+                bucket = [0 for _ in range(len(palabras))]
+                entradap = nl.word_tokenize(entrada)
+                entradap = [stemmer.stem(palabra.lower()) for palabra in entradap]
+                for palabrasimple in entradap:
+                    for i, palabra in enumerate(palabras):
+                        if palabra == palabrasimple:
+                            bucket[i] = 1
+                resultado = modelo.predict([np.asarray(bucket)])
+                resultadosIndex = np.argmax(resultado)
+                tag = tags[resultadosIndex]
 
-        else:
-            for tagAux in datos["Etiquetas"]:
-                if tagAux["tag"] == tag:
-                    respuesta = tagAux["respuesta"]
-            #Se elige una respuesta al azar según el patron que detecta 
-            print("Bot: ", random.choice(respuesta))
-            #Finalizacion del programa
-        if tag == 'despedida':
-            break
+                for idaux in datos["Etiquetas"]:
+                    if idaux["tag"] == tag:
+                        user_profile = tag
+                        user_number = int(input("Bot: Ingresa tu identificador\t"))
+
+                get_password(user_profile, user_number)
+
+            else:
+                for tagAux in datos["Etiquetas"]:
+                    if tagAux["tag"] == tag:
+                        respuesta = tagAux["respuesta"]
+                #Se elige una respuesta al azar según el patron que detecta 
+                print("Bot: ", random.choice(respuesta))
+                #Finalizacion del programa
+
+            if tag == 'despedida':
+                break
+            
+        except:
+            print("Bot: Disculpa, no entiendo lo que necesitas")
 botInit()
